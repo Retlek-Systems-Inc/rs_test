@@ -55,12 +55,17 @@ int main(int argc, char **argv)
 
     TestSuite_t RSTestSuite3 = {"RSTC Test Suite 3", RSTestCases3, ARRAY_SIZE(RSTestCases3), NULL, NULL, NULL};
 
-    TestCase_t RSTestCases4[] = {TESTCASE_DEF(RSTC_pass_end, TestCaseState_Idle),
-                                 TESTCASE_DEF(RSTC_fail_end, TestCaseState_Disabled),
-                                 TESTCASE_DEF(RSTC_pass_assert_pass_end, TestCaseState_Pass),
-                                 TESTCASE_DEF(RSTC_pass_assert_fail_end, TestCaseState_Disabled),
-                                 TESTCASE_DEF(RSTC_fail_assert_pass_end, TestCaseState_Fail),
-                                 TESTCASE_DEF(RSTC_fail_assert_fail_end, TestCaseState_Disabled)};
+    TestCase_t RSTestCases4[] = {
+        TESTCASE_DEF(RSTC_pass_end, TestCaseState_Idle),
+        TESTCASE_DEF(RSTC_fail_end, TestCaseState_Disabled),
+        TESTCASE_DEF(
+            RSTC_pass_assert_pass_end,
+            TestCaseState_Pass), // Cannot do this - will fail early because it must be either Idle or Disabled.
+        TESTCASE_DEF(RSTC_pass_assert_fail_end, TestCaseState_Disabled),
+        TESTCASE_DEF(
+            RSTC_fail_assert_pass_end,
+            TestCaseState_Fail), // Cannot do this - will fail early because it must be either Idle or Disabled.
+        TESTCASE_DEF(RSTC_fail_assert_fail_end, TestCaseState_Disabled)};
 
     TestSuite_t RSTestSuite4 = {"RSTC Test Suite 4", RSTestCases4, ARRAY_SIZE(RSTestCases4), NULL, NULL, NULL};
 
@@ -71,7 +76,7 @@ int main(int argc, char **argv)
 
     (void)rstest_init(&RSTestSuite1);
     (void)rstest_run();
-    (void)rstest_run(); // Able to run multiple times
+    (void)rstest_run(); // Able to run multiple times - counters will detect failures across multiple runs.
 
     rpt = rstest_getReport();
     (void)rpt;
