@@ -1,0 +1,13 @@
+/build/
+# Eclipse IDE
+.project
+.cproject
+.pydevproject
+
+
+#Visual Studio
+.vs
+/out
+
+#Visual Code
+.vscode
