@@ -105,7 +105,7 @@ bool rstest_testSuiteCompleted() { return (k_info.state == TestSuiteState_Comple
 bool rstest_testSuitePassed()
 {
     // Note some of these are redundant but better to confirm state of report is correct
-    return (rstest_testSuiteCompleted() &&
+    return (rstest_testSuiteCompleted() && (k_info.report.testCount != 0) &&
             (k_info.report.testCount == (k_info.report.disabledCount + k_info.report.executedCount)) &&
             (k_info.report.executedCount == k_info.report.passCount) && (k_info.report.failCount == 0));
 }
