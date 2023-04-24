@@ -25,6 +25,9 @@ cmake_minimum_required(VERSION 3.22)
 cmake_policy(SET CMP0048 NEW) # project version
 cmake_policy(SET CMP0076 NEW) # full paths
 
+option(RSTEST_MINIMAL_INFO "Builds with absolute minimum stored information"   OFF)
+option(RSTEST_BUILD_EXAMPLE "Build example code."   OFF)
+
 ########################################################################
 #
 # Project-wide settings
@@ -78,9 +81,13 @@ target_include_directories(rstest_lib
     src
 )
 
+target_compile_definitions(rstest_lib
+  PUBLIC
+    $<$<BOOL:${RSTEST_MINIMAL_INFO}>:RSTEST_MINIMAL_INFO>
+)
+
 # -----------------------------------------------------------------------------
 add_subdirectory(example)
-
 
 ########################################################################
 # Install rules

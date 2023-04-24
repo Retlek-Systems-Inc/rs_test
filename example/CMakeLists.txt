@@ -1,4 +1,8 @@
-# @copyright 2020 Retlek Systems Inc.
+# @copyright 2023 Retlek Systems Inc.
+
+if(NOT RSTEST_BUILD_EXAMPLE )
+  return()
+endif()
 
 add_executable(rstest_example)
 
