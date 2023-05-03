@@ -35,7 +35,8 @@ int main(int argc, char **argv)
                                  TESTCASE_DEF(RSTC_fail_assert_pass_end, TestCaseState_Idle),
                                  TESTCASE_DEF(RSTC_fail_assert_fail_end, TestCaseState_Idle)};
 
-    TestSuite_t RSTestSuite1 = {"RSTC Test Suite 1", RSTestCases1, ARRAY_SIZE(RSTestCases1), NULL, NULL, NULL};
+    TestSuite_t RSTestSuite1 = {
+        "RSTC Test Suite 1", RSTestCases1, ARRAY_SIZE(RSTestCases1), NULL, NULL, NULL, NULL, NULL, NULL};
 
     TestCase_t RSTestCases2[] = {TESTCASE_DEF(RSTC_pass_end, TestCaseState_Disabled),
                                  TESTCASE_DEF(RSTC_fail_end, TestCaseState_Idle),
@@ -44,7 +45,8 @@ int main(int argc, char **argv)
                                  TESTCASE_DEF(RSTC_fail_assert_pass_end, TestCaseState_Disabled),
                                  TESTCASE_DEF(RSTC_fail_assert_fail_end, TestCaseState_Idle)};
 
-    TestSuite_t RSTestSuite2 = {"RSTC Test Suite 3", RSTestCases2, ARRAY_SIZE(RSTestCases2), NULL, NULL, NULL};
+    TestSuite_t RSTestSuite2 = {
+        "RSTC Test Suite 3", RSTestCases2, ARRAY_SIZE(RSTestCases2), NULL, NULL, NULL, NULL, NULL, NULL};
 
     TestCase_t RSTestCases3[] = {TESTCASE_DEF(RSTC_pass_end, TestCaseState_Idle),
                                  TESTCASE_DEF(RSTC_fail_end, TestCaseState_Disabled),
@@ -53,7 +55,8 @@ int main(int argc, char **argv)
                                  TESTCASE_DEF(RSTC_fail_assert_pass_end, TestCaseState_Idle),
                                  TESTCASE_DEF(RSTC_fail_assert_fail_end, TestCaseState_Disabled)};
 
-    TestSuite_t RSTestSuite3 = {"RSTC Test Suite 3", RSTestCases3, ARRAY_SIZE(RSTestCases3), NULL, NULL, NULL};
+    TestSuite_t RSTestSuite3 = {
+        "RSTC Test Suite 3", RSTestCases3, ARRAY_SIZE(RSTestCases3), NULL, NULL, NULL, NULL, NULL, NULL};
 
     TestCase_t RSTestCases4[] = {
         TESTCASE_DEF(RSTC_pass_end, TestCaseState_Idle),
@@ -67,7 +70,8 @@ int main(int argc, char **argv)
             TestCaseState_Fail), // Cannot do this - will fail early because it must be either Idle or Disabled.
         TESTCASE_DEF(RSTC_fail_assert_fail_end, TestCaseState_Disabled)};
 
-    TestSuite_t RSTestSuite4 = {"RSTC Test Suite 4", RSTestCases4, ARRAY_SIZE(RSTestCases4), NULL, NULL, NULL};
+    TestSuite_t RSTestSuite4 = {
+        "RSTC Test Suite 4", RSTestCases4, ARRAY_SIZE(RSTestCases4), NULL, NULL, NULL, NULL, NULL, NULL};
 
     const TestReport_t *rpt = NULL;
 

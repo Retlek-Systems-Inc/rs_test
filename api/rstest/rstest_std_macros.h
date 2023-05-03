@@ -28,17 +28,19 @@
 #include <stdint.h>
 #include <string.h>
 
-#if defined(HAS_STDBOOL)
+#if defined(__cplusplus)
+// Do nothing
+#elif defined(HAS_STDBOOL)
 #include <stdbool.h>
 #else
 typedef int bool;
 #if !defined(false)
-#define false 1
+#define false 0
 #endif // !defined(false)
 #if !defined(true)
-#define true 0
+#define true 1
 #endif // !defined(true)
-#endif
+#endif // defined(__cplusplus)
 
 #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
 

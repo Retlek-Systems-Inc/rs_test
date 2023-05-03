@@ -36,7 +36,7 @@ void RSTC_fail_end(void)
 {
     START_TESTCASE();
 
-    END_TESTCASE_PASS();
+    END_TESTCASE_FAIL();
 }
 
 void RSTC_pass_assert_pass_end(void)

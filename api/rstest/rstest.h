@@ -90,24 +90,30 @@ extern "C"
 #endif
 
     /// Startup Callback function for test suite.
-    typedef void (*TestSuiteStartupCb_t)(void);
+    /// @param[in] user user parameter pointer
+    typedef void (*TestSuiteStartupCb_t)(void *user);
 
     /// Teardown Callback function for test suite.
-    typedef void (*TestSuiteTeardownCb_t)(void);
+    /// @param[in] user user parameter pointer
+    typedef void (*TestSuiteTeardownCb_t)(void *user);
 
     /// Failure Callback function for test suite.
     /// @param[in] record assertion record type
-    typedef void (*TestFailureCb_t)(const AssertRecord_t *record);
+    /// @param[in] user user parameter pointer
+    typedef void (*TestFailureCb_t)(const AssertRecord_t *record, void *user);
 
     /// Test Suite Structure
     typedef struct TestSuite_s
     {
-        const char           *name;       ///< TestSuite Name
-        TestCase_t           *testCases;  ///< Array of test cases
-        size_t                count;      ///< Count of test cases in testCases array
-        TestSuiteStartupCb_t  startupCb;  ///< Callback to be performed before every test case execution
-        TestSuiteTeardownCb_t teardownCb; ///< Callback to be performed at the end of every test case execution
-        TestFailureCb_t       failureCb;  ///< Callback to be performed if/when a failure occurs
+        const char           *name;           ///< TestSuite Name
+        const TestCase_t     *testCases;      ///< Array of test cases
+        size_t                count;          ///< Count of test cases in testCases array
+        TestSuiteStartupCb_t  startupCb;      ///< Callback to be performed before every test case execution
+        void                 *startupCbUser;  ///< User pointer for startup callback
+        TestSuiteTeardownCb_t teardownCb;     ///< Callback to be performed at the end of every test case execution
+        void                 *teardownCbUser; ///< User pointer for startup callback
+        TestFailureCb_t       failureCb;      ///< Callback to be performed if/when a failure occurs
+        void                 *failureCbUser;  ///< User pointer for startup callback
     } TestSuite_t;
 
     /// Assertion Record List
@@ -213,10 +219,6 @@ extern "C"
     {                             \
         (#func), (func), (state)  \
     }
-
-/// Test Suite Define
-/// See definition of rstest_init for parameters.
-#define TESTSUITE_DEF(name, initCb, testCases) rstest_init((name), initCb, (testCases), ARRAY_SIZE(testCases))
 
     // ------------------------------------------------------------------
     // Report API to extract the report location

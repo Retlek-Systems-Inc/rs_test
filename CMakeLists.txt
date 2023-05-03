@@ -1,5 +1,5 @@
 #######################################################################
-# @copyright 2020 Retlek Systems Inc.
+# @copyright 2023 Retlek Systems Inc.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -20,10 +20,34 @@
 # SOFTWARE.
 #
 # CMake Script for module level
-
 cmake_minimum_required(VERSION 3.22)
 cmake_policy(SET CMP0048 NEW) # project version
+cmake_policy(SET CMP0065 NEW) # do not add rdynamic unless explicitly stated
 cmake_policy(SET CMP0076 NEW) # full paths
+cmake_policy(SET CMP0077 NEW) # options do nothing when defined as variable.
+#cmake_policy(SET CMP0135 NEW) # fetchcontent url timestamp cmake 3.25
+
+option(BUILD_TEST      "Builds the tests"           ON )
+option(BUILD_DOC       "Builds the documentation"   OFF)
+option(STATIC_ANALYSIS "Use Static Analysis tools." ON )
+option(BUILD_BENCHMARK "No Benchmark tests"         OFF)
+
+set(CMAKE_TRY_COMPILE_TARGET_TYPE "STATIC_LIBRARY")
+
+# Design & Implementation
+include(FetchContent)
+
+#options from front-end build environment: BUILD_TEST, STATIC_ANALYSIS, BUILD_DOC, VERILOG_TEST
+FetchContent_Declare( cmake
+  GIT_REPOSITORY  https://rscmake_clone_access:h1SwGbFex6ScmtSWzzGJ@gitlab.com/retleksystems/env/cmake.git
+  GIT_TAG         v0.2.3
+)
+
+FetchContent_GetProperties(cmake)
+if(NOT cmake_POPULATED)
+  FetchContent_Populate(cmake)
+  include(${cmake_SOURCE_DIR}/Init.cmake)
+endif()
 
 option(RSTEST_MINIMAL_INFO "Builds with absolute minimum stored information"   OFF)
 option(RSTEST_BUILD_EXAMPLE "Build example code."   OFF)
@@ -31,13 +55,15 @@ option(RSTEST_BUILD_EXAMPLE "Build example code."   OFF)
 ########################################################################
 #
 # Project-wide settings
-project(rstest VERSION 0.0.1 LANGUAGES C)
+project(rstest VERSION 0.0.1 LANGUAGES C CXX)
 
 ########################################################################
 # Requirements
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 #set(CMAKE_CXX_EXTENSIONS OFF)
 
 # -----------------------------------------------------------------------------
@@ -51,14 +77,31 @@ add_compile_options(
     $<$<COMPILE_LANG_AND_ID:C,Clang,GNU>:-Werror>
     $<$<COMPILE_LANG_AND_ID:C,Clang>:-Weverything>
 
-    $<$<COMPILE_LANG_AND_ID:C,Clang>:-Wno-c++98-compat>
-    $<$<COMPILE_LANG_AND_ID:C,Clang>:-Wno-c++98-compat-pedantic>
     $<$<COMPILE_LANG_AND_ID:C,Clang>:-Wno-declaration-after-statement>
     $<$<COMPILE_LANG_AND_ID:C,Clang>:-Wno-covered-switch-default> # Allowing defaults in case statements with full coverage of defined enum.
 
+    # CXX for test environment
     # Documentation types
-    $<$<COMPILE_LANG_AND_ID:C,Clang>:-fcomment-block-commands=retval> # Doesn't recongize doxygen retval
-    $<$<COMPILE_LANG_AND_ID:C,Clang>:-fcomment-block-commands=copydetails> # Doesn't recongize doxygen copydetails
+    $<$<COMPILE_LANG_AND_ID:CXX,Clang>:-fcomment-block-commands=retval> # Doesn't recongize doxygen retval
+    $<$<COMPILE_LANG_AND_ID:CXX,Clang>:-fcomment-block-commands=copydetails> # Doesn't recongize doxygen copydetails
+
+    $<$<COMPILE_LANG_AND_ID:CXX,GNU>:-fdiagnostics-color=always>
+    $<$<COMPILE_LANG_AND_ID:CXX,Clang>:-fcolor-diagnostics>
+
+    $<$<COMPILE_LANG_AND_ID:CXX,Clang,GNU>:-Wall>
+    $<$<COMPILE_LANG_AND_ID:CXX,Clang,GNU>:-Wextra>
+    $<$<COMPILE_LANG_AND_ID:CXX,Clang>:-Wpedantic> # Note not used in GNU to allow C99 designated initializers.
+    $<$<COMPILE_LANG_AND_ID:CXX,Clang,GNU>:-Werror>
+    $<$<COMPILE_LANG_AND_ID:CXX,Clang>:-Weverything>
+
+    $<$<COMPILE_LANG_AND_ID:CXX,Clang>:-Wno-c++98-compat>
+    $<$<COMPILE_LANG_AND_ID:CXX,Clang>:-Wno-c++98-compat-pedantic>
+    $<$<COMPILE_LANG_AND_ID:CXX,Clang>:-Wno-declaration-after-statement>
+    $<$<COMPILE_LANG_AND_ID:CXX,Clang>:-Wno-covered-switch-default> # Allowing defaults in case statements with full coverage of defined enum.
+
+    # Documentation types
+    $<$<COMPILE_LANG_AND_ID:CXX,Clang>:-fcomment-block-commands=retval> # Doesn't recongize doxygen retval
+    $<$<COMPILE_LANG_AND_ID:CXX,Clang>:-fcomment-block-commands=copydetails> # Doesn't recongize doxygen copydetails
 )
 
 # -----------------------------------------------------------------------------

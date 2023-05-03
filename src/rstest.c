@@ -92,7 +92,7 @@ static void addAssertion(const AssertRecord_t *rec, bool cond)
         TestFailureCb_t failure = k_info.testSuite->failureCb;
         if (failure != NULL)
         {
-            failure(rec);
+            failure(rec, k_info.testSuite->failureCbUser);
         }
     }
 }
@@ -173,12 +173,14 @@ TestCaseState_t rstest_changeTestCaseState(const AssertRecord_t *rec, TestCaseSt
     if (state == TestCaseState_Fail)
     {
         addAssertion(rec, false);
+        k_info.current->state = state;
     }
-    else if (state == TestCaseState_Pass)
+    // Can only pass if current state is executing.
+    else if ((state == TestCaseState_Pass) && (k_info.current->state == TestCaseState_Executing))
     {
         addAssertion(rec, true);
+        k_info.current->state = state;
     }
-    k_info.current->state = state;
     return state;
 }
 
@@ -212,24 +214,32 @@ bool rstest_init(const TestSuite_t *testSuite)
     k_info.report.date = __DATE__;
     k_info.report.time = __TIME__;
 
-#if defined(__clang__)
-#pragma clang diagnostic pop
-#endif
-
     assert(k_info.testSuite->testCases != NULL);
-    TestCase_t *begin = k_info.testSuite->testCases;
-    TestCase_t *end   = begin + k_info.testSuite->count;
+    const TestCase_t *begin = k_info.testSuite->testCases;
+    const TestCase_t *end   = begin + k_info.testSuite->count;
 
-    for (k_info.current = begin; k_info.current < end; k_info.current++)
+    for (const TestCase_t *current = begin; current < end; current++)
     {
-        if ((k_info.current->state != TestCaseState_Idle) && (k_info.current->state != TestCaseState_Disabled))
+        if ((current->state != TestCaseState_Idle) && (current->state != TestCaseState_Disabled))
         {
             k_info.state = TestSuiteState_NotReady;
             return false;
         }
     }
-    k_info.current = begin;
-    k_info.state   = TestSuiteState_Ready;
+#if defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wcast-qual"
+#elif defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wcast-qual"
+#endif
+    k_info.current = (TestCase_t *)begin;
+#if defined(__GNUC__)
+#pragma GCC diagnostic pop
+#elif defined(__clang__)
+#pragma clang diagnostic pop
+#endif
+    k_info.state = TestSuiteState_Ready;
     return true;
 }
 
@@ -246,11 +256,23 @@ bool rstest_run()
     k_info.report.testCount += k_info.testSuite->count;
     k_info.state = TestSuiteState_Running;
     assert(k_info.testSuite->testCases != NULL);
-    TestCase_t *begin = k_info.testSuite->testCases;
-    TestCase_t *end   = begin + k_info.testSuite->count;
+    const TestCase_t *begin = k_info.testSuite->testCases;
+    const TestCase_t *end   = begin + k_info.testSuite->count;
 
     // Allow re-run.
-    for (k_info.current = begin; k_info.current < end; k_info.current++)
+#if defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wcast-qual"
+#elif defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wcast-qual"
+#endif
+    for (k_info.current = (TestCase_t *)begin; k_info.current < end; k_info.current++)
+#if defined(__GNUC__)
+#pragma GCC diagnostic pop
+#elif defined(__clang__)
+#pragma clang diagnostic pop
+#endif
     {
         if (k_info.current->state == TestCaseState_Disabled)
         {
@@ -264,7 +286,7 @@ bool rstest_run()
         TestSuiteStartupCb_t startup = k_info.testSuite->startupCb;
         if (startup != NULL)
         {
-            startup();
+            startup(k_info.testSuite->startupCbUser);
         }
 
         k_info.current->func();
@@ -272,7 +294,7 @@ bool rstest_run()
         TestSuiteTeardownCb_t teardown = k_info.testSuite->teardownCb;
         if (teardown != NULL)
         {
-            teardown();
+            teardown(k_info.testSuite->teardownCbUser);
         }
 
         // Update report info

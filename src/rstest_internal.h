@@ -32,25 +32,9 @@
 /// Executing  -d-> Pass      : END_TESTCASE_PASS()
 /// Executing  -d-> Fail      : ASSERT_TRUE(false) | END_TESTCASE_FAIL()
 /// @enduml 'Test Case State
-typedef enum TestSuiteState_e {
+typedef enum TestSuiteState_e
+{
     NotReady = 0, ///< Not Initialized
     Ready    = 1, ///< Initialized
     Complete = 2, ///< Completed
 } TestSuiteState_t;
-
-/// Test Suite Structure
-/// Define an array of testCases
-typedef struct TestSuite_s
-{
-    const char       *file;   ///< File defining the Testsuite
-    const char       *date;   ///< Compilation Date
-    const char       *time;   ///< Compilation Time
-    const char       *name;   ///< TestSuite name
-    TestSuiteInitCb_t initCb; ///< Init Callback performed once init complete.
-
-    TestCase_t *testCases;    ///< Array Of test cases
-    uint32_t    testCaseSize; ///< Size of Array of test cases
-
-    TestReport_t     report; ///< Report for this test case - only valid once complete
-    TestSuiteState_t state;  ///< Test Suite State
-} TestSuite_t;
