@@ -31,6 +31,7 @@ option(BUILD_TEST      "Builds the tests"           ON )
 option(BUILD_DOC       "Builds the documentation"   OFF)
 option(STATIC_ANALYSIS "Use Static Analysis tools." ON )
 option(BUILD_BENCHMARK "No Benchmark tests"         OFF)
+option(RSTEST_BUILD_EXAMPLE "Build the example for rstest" OFF)
 
 set(CMAKE_TRY_COMPILE_TARGET_TYPE "STATIC_LIBRARY")
 
@@ -55,8 +56,8 @@ endif()
 project(rstest VERSION 0.0.1 LANGUAGES C CXX)
 
 # Now add the definitions of each
-include(CodeCoverage)
-include(Sanitizer)
+# include(CodeCoverage)
+# include(Sanitizer)
 
 ########################################################################
 # Requirements
@@ -152,14 +153,15 @@ target_compile_definitions(rstest_minimal
 )
 
 # -----------------------------------------------------------------------------
-add_subdirectory(example)
-
+if(RSTEST_BUILD_EXAMPLE)
+  add_subdirectory(example)
+endif()
 # -----------------------------------------------------------------------------
 # Note need to do this last because requires all of the sub-components to
 # add/append to the COVERAGE_LCOV_EXCLUDES cached variable.
 # Don't include mock or tests as part of coverage.
-list(APPEND COVERAGE_LCOV_EXCLUDES '*/mock/*' '*/test/*')
-setup_code_coverage_target()
+# list(APPEND COVERAGE_LCOV_EXCLUDES '*/mock/*' '*/test/*')
+# setup_code_coverage_target()
 
 ########################################################################
 # Install rules
