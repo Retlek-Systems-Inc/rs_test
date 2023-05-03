@@ -268,11 +268,6 @@ bool rstest_run()
 #pragma clang diagnostic ignored "-Wcast-qual"
 #endif
     for (k_info.current = (TestCase_t *)begin; k_info.current < end; k_info.current++)
-#if defined(__GNUC__)
-#pragma GCC diagnostic pop
-#elif defined(__clang__)
-#pragma clang diagnostic pop
-#endif
     {
         if (k_info.current->state == TestCaseState_Disabled)
         {
@@ -308,6 +303,12 @@ bool rstest_run()
             k_info.report.failCount++;
         }
     }
+#if defined(__GNUC__)
+#pragma GCC diagnostic pop
+#elif defined(__clang__)
+#pragma clang diagnostic pop
+#endif
+
     k_info.state = TestSuiteState_Complete;
     return true;
 }

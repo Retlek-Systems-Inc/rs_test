@@ -12,8 +12,8 @@ TestTarget (
 
 if(TARGET UnitTest_rstest_example_suite)
 
-target_compile_options(UnitTest_rstest_example_suite
-  PRIVATE
-    $<$<COMPILE_LANG_AND_ID:CXX,Clang>:-Wno-padded>
+  target_compile_options(UnitTest_rstest_example_suite
+    PRIVATE
+      $<$<COMPILE_LANG_AND_ID:CXX,Clang>:-Wno-padded>
   )
 endif()

@@ -49,13 +49,14 @@ if(NOT cmake_POPULATED)
   include(${cmake_SOURCE_DIR}/Init.cmake)
 endif()
 
-option(RSTEST_MINIMAL_INFO "Builds with absolute minimum stored information"   OFF)
-option(RSTEST_BUILD_EXAMPLE "Build example code."   OFF)
-
 ########################################################################
 #
 # Project-wide settings
 project(rstest VERSION 0.0.1 LANGUAGES C CXX)
+
+# Now add the definitions of each
+include(CodeCoverage)
+include(Sanitizer)
 
 ########################################################################
 # Requirements
@@ -124,13 +125,41 @@ target_include_directories(rstest_lib
     src
 )
 
-target_compile_definitions(rstest_lib
+# -----------------------------------------------------------------------------
+# Adding 2 separate libraries - minimal is for minimal reporting - first error fails.
+add_library(rstest_minimal STATIC)
+add_library(RsTest::minimal ALIAS rstest_minimal)
+
+target_sources(rstest_minimal
+  PRIVATE
+    api/rstest/rstest_std_macros.h
+    api/rstest/rstest.h
+
+    src/rstest_internal.h
+    src/rstest.c
+)
+
+target_include_directories(rstest_minimal
   PUBLIC
-    $<$<BOOL:${RSTEST_MINIMAL_INFO}>:RSTEST_MINIMAL_INFO>
+    api
+  PRIVATE
+    src
+)
+
+target_compile_definitions(rstest_minimal
+  PUBLIC
+    RSTEST_MINIMAL_INFO
 )
 
 # -----------------------------------------------------------------------------
 add_subdirectory(example)
+
+# -----------------------------------------------------------------------------
+# Note need to do this last because requires all of the sub-components to
+# add/append to the COVERAGE_LCOV_EXCLUDES cached variable.
+# Don't include mock or tests as part of coverage.
+list(APPEND COVERAGE_LCOV_EXCLUDES '*/mock/*' '*/test/*')
+setup_code_coverage_target()
 
 ########################################################################
 # Install rules

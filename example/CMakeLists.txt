@@ -1,9 +1,5 @@
 # @copyright 2023 Retlek Systems Inc.
 
-if(NOT RSTEST_BUILD_EXAMPLE )
-  return()
-endif()
-
 #------------------------------------------------------------------------------
 add_library(rstest_example_suite STATIC)
 
