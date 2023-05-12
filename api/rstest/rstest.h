@@ -139,8 +139,8 @@ extern "C"
         uint32_t           executedCount; ///< Total Executed Test cases
         uint32_t           passCount;     ///< Total Passed Test cases
         uint32_t           failCount;     ///< Total Failed Test cases
+        AssertRecordList_t failAsserts;   ///< List of failing assert records
         AssertRecordList_t passAsserts;   ///< List of passing assert records
-        AssertRecordList_t failAsserts;   ///< List of failing assert recors
     } TestReport_t;
 
 #if defined(__clang__)
