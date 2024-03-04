@@ -56,7 +56,7 @@ endif()
 project(rstest VERSION 0.1.0 LANGUAGES C CXX)
 
 # Now add the definitions of each
-# include(CodeCoverage)
+include(CodeCoverage)
 include(Sanitizer)
 
 ########################################################################
@@ -160,8 +160,8 @@ endif()
 # Note need to do this last because requires all of the sub-components to
 # add/append to the COVERAGE_LCOV_EXCLUDES cached variable.
 # Don't include mock or tests as part of coverage.
-# list(APPEND COVERAGE_LCOV_EXCLUDES '*/mock/*' '*/test/*')
-# setup_code_coverage_target()
+list(APPEND COVERAGE_LCOV_EXCLUDES '*/mock/*' '*/test/*')
+setup_code_coverage_target()
 
 ########################################################################
 # Install rules
