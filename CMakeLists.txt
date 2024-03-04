@@ -39,25 +39,25 @@ set(CMAKE_TRY_COMPILE_TARGET_TYPE "STATIC_LIBRARY")
 include(FetchContent)
 
 #options from front-end build environment: BUILD_TEST, STATIC_ANALYSIS, BUILD_DOC, VERILOG_TEST
-FetchContent_Declare( cmake
-  GIT_REPOSITORY  https://rscmake_clone_access:h1SwGbFex6ScmtSWzzGJ@gitlab.com/retleksystems/env/cmake.git
-  GIT_TAG         v0.2.3
+FetchContent_Declare( rs_cmake
+  GIT_REPOSITORY  git@github.com:Retlek-Systems-Inc/rs_cmake.git
+  GIT_TAG         v0.3.1
 )
 
-FetchContent_GetProperties(cmake)
-if(NOT cmake_POPULATED)
-  FetchContent_Populate(cmake)
-  include(${cmake_SOURCE_DIR}/Init.cmake)
+FetchContent_GetProperties(rs_cmake)
+if(NOT rs_cmake_POPULATED)
+  FetchContent_Populate(rs_cmake)
+  include(${rs_cmake_SOURCE_DIR}/Init.cmake)
 endif()
 
 ########################################################################
 #
 # Project-wide settings
-project(rstest VERSION 0.0.1 LANGUAGES C CXX)
+project(rstest VERSION 0.1.0 LANGUAGES C CXX)
 
 # Now add the definitions of each
 # include(CodeCoverage)
-# include(Sanitizer)
+include(Sanitizer)
 
 ########################################################################
 # Requirements
