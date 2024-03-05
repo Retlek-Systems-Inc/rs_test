@@ -107,6 +107,10 @@ add_compile_options(
 )
 
 # -----------------------------------------------------------------------------
+include(CheckIncludeFiles)
+CHECK_INCLUDE_FILE(stdbool.h HAS_STDBOOL_H)
+
+# -----------------------------------------------------------------------------
 add_library(rstest_lib STATIC)
 add_library(RsTest::RsTest ALIAS rstest_lib)
 
@@ -120,11 +124,15 @@ target_sources(rstest_lib
 )
 
 
+# TODO(phelter): Clean this up later
 target_compile_options(rstest_lib
   PRIVATE
-    # TODO(phelter): Clean this up:
-    $<$<COMPILE_LANG_AND_ID:C,Clang>:-Wno-c2x-compat>
     $<$<COMPILE_LANG_AND_ID:C,Clang>:-Wno-unsafe-buffer-usage>
+)
+
+target_compile_definitions(rstest_lib
+  PUBLIC
+    $<$<BOOL:${HAS_STDBOOL_H}>:HAS_STDBOOL>
 )
 
 target_include_directories(rstest_lib
@@ -155,11 +163,15 @@ target_include_directories(rstest_minimal
     src
 )
 
+# TODO(phelter): Clean this up later
 target_compile_options(rstest_minimal
   PRIVATE
-    # TODO(phelter): Clean this up:
-    $<$<COMPILE_LANG_AND_ID:C,Clang>:-Wno-c2x-compat>
     $<$<COMPILE_LANG_AND_ID:C,Clang>:-Wno-unsafe-buffer-usage>
+)
+
+target_compile_definitions(rstest_minimal
+  PUBLIC
+    $<$<BOOL:${HAS_STDBOOL_H}>:HAS_STDBOOL>
 )
 
 target_compile_definitions(rstest_minimal
