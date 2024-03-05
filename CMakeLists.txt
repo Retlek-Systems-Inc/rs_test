@@ -39,25 +39,25 @@ set(CMAKE_TRY_COMPILE_TARGET_TYPE "STATIC_LIBRARY")
 include(FetchContent)
 
 #options from front-end build environment: BUILD_TEST, STATIC_ANALYSIS, BUILD_DOC, VERILOG_TEST
-FetchContent_Declare( cmake
-  GIT_REPOSITORY  https://rscmake_clone_access:h1SwGbFex6ScmtSWzzGJ@gitlab.com/retleksystems/env/cmake.git
-  GIT_TAG         v0.2.3
+FetchContent_Declare( rs_cmake
+  GIT_REPOSITORY  https://github.com/Retlek-Systems-Inc/rs_cmake.git
+  GIT_TAG         v0.3.1
 )
 
-FetchContent_GetProperties(cmake)
-if(NOT cmake_POPULATED)
-  FetchContent_Populate(cmake)
-  include(${cmake_SOURCE_DIR}/Init.cmake)
+FetchContent_GetProperties(rs_cmake)
+if(NOT rs_cmake_POPULATED)
+  FetchContent_Populate(rs_cmake)
+  include(${rs_cmake_SOURCE_DIR}/Init.cmake)
 endif()
 
 ########################################################################
 #
 # Project-wide settings
-project(rstest VERSION 0.0.1 LANGUAGES C CXX)
+project(rstest VERSION 0.1.0 LANGUAGES C CXX)
 
 # Now add the definitions of each
-# include(CodeCoverage)
-# include(Sanitizer)
+include(CodeCoverage)
+include(Sanitizer)
 
 ########################################################################
 # Requirements
@@ -107,6 +107,10 @@ add_compile_options(
 )
 
 # -----------------------------------------------------------------------------
+include(CheckIncludeFiles)
+CHECK_INCLUDE_FILE(stdbool.h HAS_STDBOOL_H)
+
+# -----------------------------------------------------------------------------
 add_library(rstest_lib STATIC)
 add_library(RsTest::RsTest ALIAS rstest_lib)
 
@@ -117,6 +121,18 @@ target_sources(rstest_lib
 
     src/rstest_internal.h
     src/rstest.c
+)
+
+
+# TODO(phelter): Clean this up later
+target_compile_options(rstest_lib
+  PRIVATE
+    $<$<COMPILE_LANG_AND_ID:C,Clang>:-Wno-unsafe-buffer-usage>
+)
+
+target_compile_definitions(rstest_lib
+  PUBLIC
+    $<$<BOOL:${HAS_STDBOOL_H}>:HAS_STDBOOL>
 )
 
 target_include_directories(rstest_lib
@@ -147,6 +163,17 @@ target_include_directories(rstest_minimal
     src
 )
 
+# TODO(phelter): Clean this up later
+target_compile_options(rstest_minimal
+  PRIVATE
+    $<$<COMPILE_LANG_AND_ID:C,Clang>:-Wno-unsafe-buffer-usage>
+)
+
+target_compile_definitions(rstest_minimal
+  PUBLIC
+    $<$<BOOL:${HAS_STDBOOL_H}>:HAS_STDBOOL>
+)
+
 target_compile_definitions(rstest_minimal
   PUBLIC
     RSTEST_MINIMAL_INFO
@@ -160,8 +187,8 @@ endif()
 # Note need to do this last because requires all of the sub-components to
 # add/append to the COVERAGE_LCOV_EXCLUDES cached variable.
 # Don't include mock or tests as part of coverage.
-# list(APPEND COVERAGE_LCOV_EXCLUDES '*/mock/*' '*/test/*')
-# setup_code_coverage_target()
+list(APPEND COVERAGE_LCOV_EXCLUDES '*/mock/*' '*/test/*')
+setup_code_coverage_target()
 
 ########################################################################
 # Install rules

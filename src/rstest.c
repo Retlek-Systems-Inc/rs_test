@@ -100,9 +100,9 @@ static void addAssertion(const AssertRecord_t *rec, bool cond)
 // ------------------------------------------------------------------
 // Report API
 
-bool rstest_testSuiteCompleted() { return (k_info.state == TestSuiteState_Complete); }
+bool rstest_testSuiteCompleted(void) { return (k_info.state == TestSuiteState_Complete); }
 
-bool rstest_testSuitePassed()
+bool rstest_testSuitePassed(void)
 {
     // Note some of these are redundant but better to confirm state of report is correct
     return (rstest_testSuiteCompleted() && (k_info.report.testCount != 0) &&
@@ -110,7 +110,7 @@ bool rstest_testSuitePassed()
             (k_info.report.executedCount == k_info.report.passCount) && (k_info.report.failCount == 0));
 }
 
-const TestReport_t *rstest_getReport()
+const TestReport_t *rstest_getReport(void)
 {
     if (k_info.state != TestSuiteState_Complete)
     {
@@ -243,7 +243,7 @@ bool rstest_init(const TestSuite_t *testSuite)
     return true;
 }
 
-bool rstest_run()
+bool rstest_run(void)
 {
 
     if (k_info.state == TestSuiteState_NotReady)
