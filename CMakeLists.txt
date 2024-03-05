@@ -40,7 +40,7 @@ include(FetchContent)
 
 #options from front-end build environment: BUILD_TEST, STATIC_ANALYSIS, BUILD_DOC, VERILOG_TEST
 FetchContent_Declare( rs_cmake
-  GIT_REPOSITORY  git@github.com:Retlek-Systems-Inc/rs_cmake.git
+  GIT_REPOSITORY  https://github.com/Retlek-Systems-Inc/rs_cmake.git
   GIT_TAG         v0.3.1
 )
 
