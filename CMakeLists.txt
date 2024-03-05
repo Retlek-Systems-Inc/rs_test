@@ -119,6 +119,14 @@ target_sources(rstest_lib
     src/rstest.c
 )
 
+
+target_compile_options(rstest_lib
+  PRIVATE
+    # TODO(phelter): Clean this up:
+    $<$<COMPILE_LANG_AND_ID:C,Clang>:-Wno-c2x-compat>
+    $<$<COMPILE_LANG_AND_ID:C,Clang>:-Wno-unsafe-buffer-usage>
+)
+
 target_include_directories(rstest_lib
   PUBLIC
     api
@@ -145,6 +153,13 @@ target_include_directories(rstest_minimal
     api
   PRIVATE
     src
+)
+
+target_compile_options(rstest_minimal
+  PRIVATE
+    # TODO(phelter): Clean this up:
+    $<$<COMPILE_LANG_AND_ID:C,Clang>:-Wno-c2x-compat>
+    $<$<COMPILE_LANG_AND_ID:C,Clang>:-Wno-unsafe-buffer-usage>
 )
 
 target_compile_definitions(rstest_minimal

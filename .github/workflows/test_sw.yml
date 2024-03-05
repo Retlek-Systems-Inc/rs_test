@@ -176,7 +176,7 @@ jobs:
       - name: Preparing clang-${{ env.CLANG_VER }}
         run: cmake -G "Ninja Multi-Config" -B${CLANG_DIR} -DCMAKE_C_COMPILER=clang-${CLANG_VER} -DCMAKE_CXX_COMPILER=clang++-${CLANG_VER} -DFETCHCONTENT_BASE_DIR=${DEPS_DIR} ${CMAKE_BUILD_ARGS} .
       - name: Scan Build ${{ matrix.build_type }} in ${{ matrix.build_dir }}
-        run: scan-build-14 -o scan-build -k --status-bugs -internal-stats --keep-empty cmake --build ${BUILD_DIR} --config ${BUILD_TYPE}
+        run: scan-build-${CLANG_VER} -o scan-build -k --status-bugs -internal-stats --keep-empty cmake --build ${BUILD_DIR} --config ${BUILD_TYPE}
       - name: Scan Build Artifacts
         uses: actions/upload-artifact@v4
         with:
