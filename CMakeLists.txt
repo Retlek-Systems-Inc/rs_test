@@ -107,7 +107,7 @@ add_compile_options(
 )
 
 # -----------------------------------------------------------------------------
-include(CheckIncludeFiles)
+include(CheckIncludeFile)
 CHECK_INCLUDE_FILE(stdbool.h HAS_STDBOOL_H)
 
 # -----------------------------------------------------------------------------
